@@ -1,0 +1,25 @@
+Mips.v                        //Main program this will call all other subroutines.
+  fetch.v                     //Fetch Cycle, it is the first subroutine
+    programcounter.v          //Simple file that changes the address to the mux output
+    mux.v                     //First mux called. All mux's can use the same mux file because it is a selection tool.
+    4bitadder.v               //Adds 4 to the current value/address and returns
+    instruction_ROM.v         //Contains all the instructions and their addresses
+  register.v                  //Stores all of the information from the fetch stage
+  decode.v                    //Decode Cycle, it is the second subroutine
+    registerfile.v            //Contains all the registers and their addresses
+    control(1).v              //Contains all the control values for each different type of instruction
+    signExtend.v              //Extends a 6-bit value into 16-bits. Dependent on the most significant bit
+  register2.v                 //Stores all of the information from the decode stage
+  execute.v                   //Execute Cycle, it is the third subroutine
+    adder.v                   //Adds two values and outputs the result
+    shiftLeft.v               //shifts things to the left
+    alumodule.v               //Performs all the different types of Arithmetic operations
+    mux.v                     //Second mux called
+    aluControl.v              //Determines ALU operation
+    mux.v                     //Third mux called
+  register3.v                 //Stores all of the information from the execute stage
+  memory.v                    //Memory Cycle, it is the fourth subroutine
+    dataMemory.v              //Determines a write/read from memory and performs that action on a particular address
+  register4.v                 //Stores all of the information from the memory stage
+  writeback.v                 //Writeback Cycle, it is the final subroutine
+    mux.v                     //Fourth mux called
