@@ -1,4 +1,4 @@
-/* utility.h
+/* utility.c
   TEAM ACT
   
   This file contains useful functions regarding commonly
@@ -23,5 +23,17 @@ int mux(int clk, int d0, int d1, int sel) {
     if (sel == 0) out = d0;
     if (sel == 1) out = d1;
     
+    return out;
+}
+
+//////////////////////////////////////////
+// 4-BIT ADDER
+//  clk: input clk
+//  val: input value to be added to
+//  return: out - val+4
+//////////////////////////////////////////
+int fourBitAdder(int clk, int val) {
+    int out = 0;
+    out = val+4;
     return out;
 }

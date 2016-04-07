@@ -28,6 +28,8 @@ void main(int argc, char *argv[]) {
     int clk = 0;
     int in_addr = 15;
     int current_address = 0;
+    int fetchMuxOut = 0;
+    int fetch4bAdderOut = 0;
     
     if (debug_input) printf("\nBegin main()...");
     if (debug_input) printf("\narg1 = %s", argv[1]);
@@ -39,11 +41,21 @@ void main(int argc, char *argv[]) {
     //      
     ///////////////////////////////////////////////
     if (debug_fetch) printf("\n\nFETCH: ");
+    
+    //program counter
     current_address = programCounter(clk, in_addr);
     if (debug_fetch) printf("\ncurrent_address = %d", current_address);
-    temp = mux(clk, 10, 20, 1);
-    printf("\ntemp: %d", temp);
     
+    //mux
+    fetchMuxOut = mux(clk, 10, 20, 1);
+    if (debug_fetch) printf("\nfetchMuxOut = %d", fetchMuxOut);
+    
+    //4b adder
+    fetch4bAdderOut = fourBitAdder(clk, 1);
+    if (debug_fetch) printf("\nfetch4bAdderOut = %d", fetch4bAdderOut);
+    
+    //instruction ROM
+    instructionROM(clk, 12);
     if (debug_fetch) printf("\nEND FETCH:\n");
     ///////////////////////////////////////////////
     // DECODE STAGE
