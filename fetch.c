@@ -12,17 +12,58 @@
 int debug = 0;
 
 //////////////////////////////////////////
+// FETCH
+//  //INPUTS
+//  clk: input clk
+//  adder2out:
+//  pcSrc:
+//  
+//  //OUTPUTS
+//  adder1:
+//  instruction: 
+//////////////////////////////////////////
+void fetch(int clk, int adder2out, int pcSrc, int adder1, int instruction) {
+    int muxout1;
+    int address;
+    int i;
+    
+    //test init
+    pcSrc = 0; //select = adder2out
+    adder1 = 0;
+    adder2out = 2;
+    
+    //this shows consecutive fetch of all instructions
+    //for (i = 0; i < 18; i++) {
+        
+    muxout1 = mux(clk, adder1, adder2out, pcSrc);    //check for ordering (mux)
+    //if (debug) printf("\nmuxout1 = %d", muxout1);
+    address = programCounter(clk, muxout1, address); //check for ordering (mux)
+    //if (debug) printf("\naddress = %d", address);
+    //muxout1 = mux(clk, adder1, adder2out, pcSrc);    //check for ordering (mux)
+    adder1 = fourBitAdder(clk, address);
+    if (debug) printf("\nadder1 = %d", adder1);
+    instruction = instructionROM(clk, address);
+    if (debug) printf("\ninstruction = %d", instruction);
+    
+    //}
+    
+}
+//////////////////////////////////////////
+//////////////////////////////////////////
+
+
+
+
+//////////////////////////////////////////
 // PROGRAM COUNTER
 //  clk: input clock
 //  muxout1: output from PC mux
 //  return: out_ProgramCounter
 //////////////////////////////////////////
 int programCounter(int clk, int muxout1) {
-    int out_ProgramCounter = 0;
-    if (debug) printf("\n   Begin programCounter()...");
-    out_ProgramCounter = muxout1;
-    if (debug) printf("\n   End programCounter()...");
-    return out_ProgramCounter;
+    int address = 0;
+    address = muxout1;
+    return address;
 }
 
 //////////////////////////////////////////
@@ -32,24 +73,55 @@ int programCounter(int clk, int muxout1) {
 //  return: out
 //////////////////////////////////////////
 int instructionROM(int clk, int addr) {
-    int out = 0;
-    int opcode = 0;
+    int output = 0;
     
-    //disolve instruction to get opcode for instruction
-    // 1000 000 000 000000 = 32768
-    // 1001 000 000 000000 = 36864
-    // therefore any value b/w 32768 and 36864 is an addi
-        
     //16b input
-    switch(opcode) {
-        //addi 1000,rs,rt,immediate
-        case 1:
-            
+    //PC increments by 4 everytime
+    switch(addr) {
+        case 0: //0000 0000 0000 0000 
+            output = 43969;
             break;
-        
-        
+        case 4: //0000 0000 0000 0100
+            output = 23056;
+            break;
+        case 8: //0000 0000 0000 1000
+            output = 36863;
+            break;
+        case 12: //0000 0000 0000 1100
+            output = 15232;
+            break;
+        case 16:
+        case 20:
+        case 24:
+        case 28:
+        case 32:
+        case 36:
+        case 40:
+            output = 35681;
+            break;
+        case 44:
+            output = 43880;
+            break;
+        case 48:
+            output = 23051;
+            break;
+        case 52:
+            output = 9283;
+            break;
+        case 56:
+            output = 54410;
+            break;
+        case 60:
+            output = 48000;
+            break;
+        case 64:
+            output = 1730;
+            break;
+        case 68:
+            output = 59675;
+            break;        
     }
-    
+    return output;
 }
 
 /* always 
