@@ -5,8 +5,8 @@
 
 // includes
 #include <stdio.h>
-#include "fetch.h"
-#include "utility.h"
+#include "fetch.c"
+#include "utility.c"
 
 // function definition
 //  
