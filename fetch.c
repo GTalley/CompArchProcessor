@@ -9,7 +9,7 @@
 // includes
 #include <stdio.h>
 
-int debug = 1;
+int debug_fetchc = 1;
 
 //////////////////////////////////////////
 // FETCH
@@ -28,19 +28,19 @@ void fetch(int clk, int adder2out, int pcSrc, int* adder1, int* instruction) {
     
     //get output of mux, determines if output is PC+4 or branch
     muxout1 = mux(clk, *adder1, adder2out, pcSrc);    //check for ordering (mux)
-    //if (debug) printf("\nmuxout1 = %d", muxout1);
+    //if (debug_fetchc) printf("\nmuxout1 = %d", muxout1);
     
     //determine address, this does nothing to value
     address = programCounter(clk, muxout1, address); //check for ordering (mux)
-    //if (debug) printf("\naddress = %d", address);
+    //if (debug_fetchc) printf("\naddress = %d", address);
     
     //get instruction from instruction register file
     *instruction = instructionROM(clk, address);
-    //if (debug) printf("\ninstruction = %d", instruction);
+    //if (debug_fetchc) printf("\ninstruction = %d", instruction);
     
     //increment PC, PC = PC+4, wired to muxout1
     *adder1 = fourBitAdder(clk, address); //increment program counter
-    //if (debug) printf("\nadder1 = %d", adder1);
+    //if (debug_fetchc) printf("\nadder1 = %d", adder1);
 
     
 }
