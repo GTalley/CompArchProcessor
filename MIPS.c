@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include "fetch.c"
 #include "memory.c"
+#include "decode.c"
+#include "writeback.c"
 #include "utility.c"
 #include "time.h"
 
@@ -27,6 +29,17 @@ int mem2 = -1;
 int mem3 = -1;
 int mem4 = -1;
 int mem5 = -1;
+
+//Control Signals as pointers
+int *jmp = 0;
+int *regWrite = 0;
+int *memtoReg = 0;
+int *branch = 0;
+int *memRead = 0;
+int *memWrite = 0;
+int *regDst = 0;
+char *aluOp[4];
+int *aluSrc = 0;
 
 
 
@@ -58,18 +71,9 @@ void main(int argc, char *argv[]) {
     if (debug_fetch) printf("\n\nFETCH: ");
 
     //testing, run through all instructions
-/*     for (i = 0; i < 18; i++) {
-        fetch(clk, adder2out, pcSrc, &adder1in, &FET_instruction);
-        //start_t = clock();
-        //end_t = 0;
-        //while ((((double)(end_t - start_t))/CLOCKS_PER_SEC) < 1) {  //simulating a 1s clock for debug
-        //        end_t = clock();
-        //}
-        Reg_FetchToDecode(clk, &adder1in, &FET_instruction, &adder1out, &DEC_instruction);
-        if (debug_fetch) printf("\nDEC_instruction: %d", DEC_instruction);  
-    } */
     fetch(clk, adder2out, pcSrc, &adder1in, &FET_instruction);
     Reg_FetchToDecode(clk, &adder1in, &FET_instruction, &adder1out, &DEC_instruction);
+    if (debug_fetch) printf("\nDEC_instruction: %d", DEC_instruction);  
     
     if (debug_fetch) printf("\nEND FETCH:\n");
     ///////////////////////////////////////////////
@@ -78,6 +82,11 @@ void main(int argc, char *argv[]) {
     //      
     ///////////////////////////////////////////////
     if (debug_decode) printf("\nDECODE: ");
+
+    decode(clk, reset, &adder1Out, &DEC_instruction, mux4Out, &regWrite);
+
+
+
     if (debug_decode) printf("\nEND DECODE:\n");
     ///////////////////////////////////////////////
     // EXECUTE STAGE
@@ -101,6 +110,16 @@ void main(int argc, char *argv[]) {
     
     
     // END MAIN
+
+    if (debug_memory) printf("\nMemory: ");
+    if (debug_memory) printf("\nEND Memory:\n");
+
+
+    if (debug_writeBack) printf("\nWriteBack: ");
+
+    writeBack(clk, &regwrite, &memtoReg, rdData3_2, aluResultOut3, mux3Out4);
+
+    if (debug_writeBack) printf("\nEND WriteBack:\n");
     printf("\n\nEnd main()...");
     printf("\n");
 }
